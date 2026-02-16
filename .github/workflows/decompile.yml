@@ -1,0 +1,30 @@
+name: Decompile Minecraft (Manual)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  decompile:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Grant execute permission for Gradle
+        run: chmod +x ./gradlew
+
+      - name: Run Quilt decompiler
+        run: ./gradlew decompileVineflower --no-daemon
+
+      - name: Upload decompiled source
+        uses: actions/upload-artifact@v4
+        with:
+          name: minecraft-decompiled
+          path: build/namedSrc/
